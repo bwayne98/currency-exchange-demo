@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  go:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    working_dir: /app
+    ports:
+      - 3000:3000
+    volumes:
+      - ../:/app
+    command: gin -p 3000 -a 80 --buildArgs "-buildvcs=false" run main go
