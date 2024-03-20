@@ -45,7 +45,7 @@ func strToFloat(amount string) (float64, error) {
 	f, err := strconv.ParseFloat(amount, 64)
 
 	if err != nil {
-		return 0.0, err
+		return 0, errors.New("金額格式錯誤")
 	}
 
 	return f, nil
