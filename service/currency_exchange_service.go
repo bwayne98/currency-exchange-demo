@@ -10,8 +10,6 @@ import (
 
 type CurrencyExchangeService struct{}
 
-type ExchangeMap = map[string]map[string]float64
-
 func (service *CurrencyExchangeService) Exchange(exchangeMap ExchangeMap, amountString string, source string, target string) (string, error) {
 
 	amount, err := strToFloat(amountString)

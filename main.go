@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/bwayne98/currency-exchange-demo/service"
@@ -28,24 +29,16 @@ func main() {
 		c.String(http.StatusOK, "Hello World!")
 	})
 
-	service := service.CurrencyExchangeService{}
-	exchangeMap := map[string]map[string]float64{
-		"TWD": {
-			"TWD": 1,
-			"JPY": 3.669,
-			"USD": 0.03281,
-		},
-		"JPY": {
-			"TWD": 0.26956,
-			"JPY": 1,
-			"USD": 0.00885,
-		},
-		"USD": {
-			"TWD": 30.444,
-			"JPY": 111.801,
-			"USD": 1,
-		},
+	rateService := service.CurencyExchngeRateService{}
+
+	exchangeRate, err := rateService.Fetch()
+
+	if err != nil {
+		fmt.Printf("%e", err)
+		return
 	}
+
+	changeService := service.CurrencyExchangeService{}
 
 	route.POST("exchange", func(c *gin.Context) {
 		var request ExchangeRequest
@@ -65,7 +58,7 @@ func main() {
 			return
 		}
 
-		amount, err := service.Exchange(exchangeMap, request.Amount, request.Source, request.Target)
+		amount, err := changeService.Exchange(exchangeRate.Currencies, request.Amount, request.Source, request.Target)
 
 		if err != nil {
 			c.JSON(http.StatusBadRequest, ExchangeResponse{
